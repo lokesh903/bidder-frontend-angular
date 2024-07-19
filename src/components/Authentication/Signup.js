@@ -1,6 +1,7 @@
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
+import { Select } from '@chakra-ui/react'
 import { VStack } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
@@ -15,6 +16,7 @@ const Signup = () => {
 
   const [name, setName] = useState();
   const [email, setEmail] = useState();
+  const [role, setRole] = useState("CLIENT"); // Default value
   const [confirmpassword, setConfirmpassword] = useState();
   const [password, setPassword] = useState();
   const [pic, setPic] = useState();
@@ -22,9 +24,9 @@ const Signup = () => {
 
   const submitHandler = async () => {
     setPicLoading(true);
-    if (!name || !email || !password || !confirmpassword) {
+    if (!name || !email || !password || !confirmpassword || !role) {
       toast({
-        title: "Please Fill all the Feilds",
+        title: "Please Fill all the Fields",
         status: "warning",
         duration: 5000,
         isClosable: true,
@@ -41,9 +43,10 @@ const Signup = () => {
         isClosable: true,
         position: "bottom",
       });
+      setPicLoading(false);
       return;
     }
-    console.log(name, email, password, pic);
+    console.log(name, email, password, role, pic);
     try {
       const config = {
         headers: {
@@ -56,6 +59,7 @@ const Signup = () => {
           name,
           email,
           password,
+          role,
           pic,
         },
         config
@@ -73,7 +77,7 @@ const Signup = () => {
       history.push("/chats");
     } catch (error) {
       toast({
-        title: "Error Occured!",
+        title: "Error Occurred!",
         description: error.response.data.message,
         status: "error",
         duration: 5000,
@@ -94,6 +98,7 @@ const Signup = () => {
         isClosable: true,
         position: "bottom",
       });
+      setPicLoading(false);
       return;
     }
     console.log(pics);
@@ -145,6 +150,16 @@ const Signup = () => {
           placeholder="Enter Your Email Address"
           onChange={(e) => setEmail(e.target.value)}
         />
+      </FormControl>
+      <FormControl id="role" isRequired>
+        <FormLabel>Role</FormLabel>
+        <Select
+          placeholder="Select role"
+          onChange={(e) => setRole(e.target.value)}
+        >
+          <option value="MANAGER">MANAGER</option>
+          <option value="CLIENT">CLIENT</option>
+        </Select>
       </FormControl>
       <FormControl id="passwords" isRequired>
         <FormLabel>Password</FormLabel>
